@@ -18,7 +18,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    resume: {
+    summary: {
       type: DataTypes.STRING,
       allowNull: false
     },
