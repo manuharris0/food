@@ -1,8 +1,5 @@
 const axios = require('axios');
 
-require('dotenv').config();
-const {API_KEY} = process.env
-
 const RecipeService = require('../../services/recipeService');
 const service = new RecipeService;
 
@@ -12,21 +9,19 @@ const getRecipeById = async (req, res) => {
     
     if(isNaN(id)) {
         try {
-            const recipeDiets = await service.find(id);
-            res.status(200).json(recipeDiets);
+            const recipe = await service.find(id);
+            res.status(200).json(recipe);
         } catch (error) {
             res.status(404).json({err: error.message});
         }
     } else {
         try {
-            const URL = `https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}`
-            const response = await axios.get(URL);
-            const diets = response.data.diets;
-            res.status(200).json(diets)
+            const apiRecipe = await service.apiFind(id);
+            res.status(200).json(apiRecipe)
         } catch (error) {
-            console.log({err: error.message});
-        }
-    }
+            res.status(404).json({err: error.message})
+        };
+    };
 };
 
 module.exports = getRecipeById;

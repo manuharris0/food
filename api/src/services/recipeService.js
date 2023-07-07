@@ -1,19 +1,39 @@
 const axios = require('axios');
 const { Recipe, Diet } = require('../db');
+require('dotenv').config();
 const API_KEY = process.env;
-const URL = `https://spoonacular.com/food-api/docs#Diets?${API_KEY}`;
-
 
 class RecipeService {
-    // Acá van a estar todos los controllers de recipes (las consultas a la bd)
+    
     constructor() {};
 
-    // Métodos que interactúan con la base de datos
+    async apiFind(id) {
+        try {
+            const response = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=36e35b29265846df8544054308236193`)
+    
+            const { title, image, summary, diets } = response.data
+            const stepsBySteps = response.data.analyzedInstructions[0].steps;
+            const stepInfo = [];
+            stepsBySteps.map((step) => stepInfo.push(step.step));
+    
+            const info = ({
+                title,
+                image,
+                summary,
+                diets,
+                stepInfo
+            });
+            return info
+    
+            } catch (error) {
+            return error.message;
+        }
+    }   
+        
     async find(id) {
-        const recipeDiets = await Recipe.findByPk(id, {
+        const recipe = await Recipe.findByPk(id, {
             include: {
-                attributes: [],
-                // Casi perfecto, falta que no devuelva la info de la receta, si no solo la de las dietas asociadas (que ya lo hace)
+                
                 model: Diet,
                 attributes: ["name"],
 
@@ -22,11 +42,12 @@ class RecipeService {
                 }    
             }
         });
-        if(!recipeDiets) throw new Error(`No se encontró personaje con id ${id}`)
-        return recipeDiets;
+        if(!recipe) throw new Error(`No recipe found with id: ${id}`)
+        return recipe;
     };
 
     async create({name, image, resume, healthScore, steps, diets}) {
+        if(!name || !image ||!resume || !healthScore ||!steps) throw new Error('Missing information needed to create the recipe');
         const newRecipe = await Recipe.create({
             name,
             image,
@@ -35,7 +56,11 @@ class RecipeService {
             steps
         });
         newRecipe.addDiets(diets);
-        return newRecipe;
+        // Método de los modelos para agregarse en la tabla intermedia
+        return {
+            status: 'Created',
+            'New recipe': newRecipe
+        };
        // Probar los constrains y las validacionesa
     };
 
