@@ -3,10 +3,14 @@ service = new DietService();
 
 const getDiets = async (req, res) => {
     try {
-        const diets = await service.find() 
-        res.status(200).json(diets);
+        const diets = await service.find();
+        if(diets.length > 0) res.status(200).json(diets);
+        else {
+            const apiDiets = await service.generate();
+            res.status(200).json(apiDiets);
+        }
     } catch (error) {
-        res.json(error.message);
+        res.status(400).json(error.message);
     }
 };
 

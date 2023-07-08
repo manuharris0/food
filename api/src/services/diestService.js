@@ -6,22 +6,43 @@ const URL = `https://api.spoonacular.com/recipes/complexSearch?addRecipeInformat
 class DietService {
     constructor () {
         // Paso a paso para llenar la tabla de diets
+        // Hacer esto solo si
         // 1. hacer la petición a axios de toda la info de las recetas
+        // mapear response.data.results
+        // por cada result entrar a lapropiedad diets
         // entrar en response.data.results.diets
+        // Opcion 1 (Set)
+        // pushear a this.diets todos los valores de diets
+        // pasar el array a set para eliminar valores duplicados
+        // hacerle un bulk create a Diet 
     };
+    
     async generate() {
         try {
-            const response = await axios.get(URL)
-            this.diets.push(response.data)
-            return this.diets;
+            const diets = [];
+            const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch?addRecipeInformation=true&number=100&apiKey=c218ab40b6854942b29ee5c97e23ef89');
+            response.data.results.map(result => diets.push(result.diets));
+            
+            const dietsArr = diets.flatMap(subarray => {
+                return subarray
+            })
+            const dietsSet = new Set(dietsArr);
+            const bulkDiets = [...dietsSet];
+            const definitiveDiets = bulkDiets.map((bulk) => {
+                return {name: bulk};
+            })
+            const databaseDiets = await Diet.bulkCreate(definitiveDiets);
+            return databaseDiets;
         } catch (error) {
-            console.log(error);
+            throw new Error(error.message);
         }
     };
+
     async find() {
-        if(this.diets.length) {
-          return this.diets;
-        } else throw new Error('No se encontraron dietas');
+        const diets = await Diet.findAll({
+            attributes: ['name']
+         });
+         return diets;
     };
     async create(name) {
         const newDiet = await Diet.create({name});
