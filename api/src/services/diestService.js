@@ -5,22 +5,16 @@ const URL = `https://api.spoonacular.com/recipes/complexSearch?addRecipeInformat
 
 class DietService {
     constructor () {
-        // Paso a paso para llenar la tabla de diets
-        // Hacer esto solo si
-        // 1. hacer la petición a axios de toda la info de las recetas
-        // mapear response.data.results
-        // por cada result entrar a lapropiedad diets
-        // entrar en response.data.results.diets
-        // Opcion 1 (Set)
-        // pushear a this.diets todos los valores de diets
-        // pasar el array a set para eliminar valores duplicados
-        // hacerle un bulk create a Diet 
     };
     
     async generate() {
         try {
             const diets = [];
             const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch?addRecipeInformation=true&number=100&apiKey=c218ab40b6854942b29ee5c97e23ef89');
+
+            const dietsKeys = Object.keys(response.data.results[0]).slice(0, 3)
+            diets.push(dietsKeys);
+
             response.data.results.map(result => diets.push(result.diets));
             
             const dietsArr = diets.flatMap(subarray => {
