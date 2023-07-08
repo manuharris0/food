@@ -2,7 +2,7 @@ const axios = require('axios');
 const { Recipe, Diet } = require('../db');
 const { Op } = require('sequelize');
 require('dotenv').config();
-const API_KEY = process.env;
+const { API_KEY } = process.env;
 
 class RecipeService {
     
@@ -10,8 +10,8 @@ class RecipeService {
 
     async apiFind(id) {
         try {
-            const response = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=36e35b29265846df8544054308236193`)
-    // Falta dejar la apikey como una variable para no subirla a git hub
+            const response = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}`)
+
             const { title, image, summary, diets, healthScore } = response.data
             const stepsBySteps = response.data.analyzedInstructions[0].steps;
             const steps = [];
@@ -28,7 +28,7 @@ class RecipeService {
             return info
     
             } catch (error) {
-            return error.message;
+            throw new Error(`No recipe found in API with id: ${id}`)
         }
     };
         
@@ -44,7 +44,7 @@ class RecipeService {
                 }    
             }
         });
-        if(!recipe) throw new Error(`No recipe found with id: ${id}`)
+        if(!recipe) throw new Error(`No recipe found in database with id: ${id}`)
         return recipe;
     };
 
@@ -79,7 +79,7 @@ class RecipeService {
         const matchedRecipes = [];
         recipes.map(recipe => matchedRecipes.push(recipe.name));
         try {
-            const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch?number=100&apiKey=36e35b29265846df8544054308236193');
+            const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?number=100&apiKey=${API_KEY}`);
             const loweQuery = query.toLowerCase();
             response.data.results.map((result) => {
                 if(result.title.toLowerCase().includes(loweQuery)) {

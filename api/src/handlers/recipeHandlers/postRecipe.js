@@ -4,8 +4,9 @@ const service = new RecipeService;
 const postRecipe = async (req, res) => {
     try {
         const {name, image, summary, healthScore, steps, diets} = req.body;
+        const lowerName = name.toLowerCase();
         const newRecipe = await service.create({
-            name,
+            name: lowerName,
             image,
             summary,
             healthScore,

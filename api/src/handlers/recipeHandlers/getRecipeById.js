@@ -12,7 +12,7 @@ const getRecipeById = async (req, res) => {
             const recipe = await service.find(id);
             res.status(200).json(recipe);
         } catch (error) {
-            res.status(404).json({err: error.message});
+            res.status(400).json({err: error.message});
         }
     } else {
         try {

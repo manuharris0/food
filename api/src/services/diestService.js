@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { Diet } = require('../db')
-const API_KEY = process.env;
-const URL = `https://api.spoonacular.com/recipes/complexSearch?addRecipeInformation=true&number=1&apiKey=36e35b29265846df8544054308236193`;
+const { API_KEY } = process.env;
+const URL = `https://api.spoonacular.com/recipes/complexSearch?addRecipeInformation=true&number=100&apiKey=${API_KEY}`;
 
 class DietService {
     constructor () {
@@ -10,7 +10,7 @@ class DietService {
     async generate() {
         try {
             const diets = [];
-            const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch?addRecipeInformation=true&number=100&apiKey=c218ab40b6854942b29ee5c97e23ef89');
+            const response = await axios.get(URL);
 
             const dietsKeys = Object.keys(response.data.results[0]).slice(0, 3)
             diets.push(dietsKeys);
