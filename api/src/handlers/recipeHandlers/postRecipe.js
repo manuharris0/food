@@ -3,11 +3,11 @@ const service = new RecipeService;
 
 const postRecipe = async (req, res) => {
     try {
-        const {name, image, resume, healthScore, steps, diets} = req.body;
+        const {name, image, summary, healthScore, steps, diets} = req.body;
         const newRecipe = await service.create({
             name,
             image,
-            resume,
+            summary,
             healthScore,
             steps,
             diets

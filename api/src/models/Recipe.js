@@ -13,6 +13,7 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true
     },
     image: {
       type: DataTypes.STRING,
@@ -27,7 +28,7 @@ module.exports = (sequelize) => {
       allowNull: false
     },
     steps: {
-      type: DataTypes.STRING,
+      type: DataTypes.ARRAY(DataTypes.STRING),
       allowNull: false
     }
   },

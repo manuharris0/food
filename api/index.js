@@ -22,7 +22,7 @@ const { conn } = require('./src/db.js');
 // Me traigo al index la conección que declaré
 
 // Syncing all the models at once.
-conn.sync({ alter: true }).then(() => { // método de la db para sincronizarce con el server
+conn.sync({ force: true }).then(() => { // método de la db para sincronizarce con el server
   // force: true, para dropear los datos y que no se acumulen al trabajar con el codigo
   // una vez se lanze la app, se cambia a alter: true, para que percistan los datos
   server.listen(3001, () => {

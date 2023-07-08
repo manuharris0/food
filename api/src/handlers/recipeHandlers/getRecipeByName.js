@@ -9,9 +9,9 @@ const getRecipeByName = async (req, res) =>  {
             const recipe = await service.findOne(name)
             res.status(200).json(recipe);
         } catch (error) {
-            res.json({err: error.message});
+            res.status(404).json({err: error.message});
         };
-    } else res.status(300).send('no se pasó query, podría devolver todas las recetas (probablemente no)')
+    } else res.status(400).json({message: 'Some name must be passed by query'});
 };
 
 module.exports = getRecipeByName;

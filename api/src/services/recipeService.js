@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { Recipe, Diet } = require('../db');
+const { Op } = require('sequelize');
 require('dotenv').config();
 const API_KEY = process.env;
 
@@ -10,25 +11,26 @@ class RecipeService {
     async apiFind(id) {
         try {
             const response = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=36e35b29265846df8544054308236193`)
-    
-            const { title, image, summary, diets } = response.data
+    // Falta dejar la apikey como una variable para no subirla a git hub
+            const { title, image, summary, diets, healthScore } = response.data
             const stepsBySteps = response.data.analyzedInstructions[0].steps;
-            const stepInfo = [];
-            stepsBySteps.map((step) => stepInfo.push(step.step));
+            const steps = [];
+            stepsBySteps.map((step) => steps.push(step.step));
     
             const info = ({
-                title,
+                name: title,
                 image,
                 summary,
-                diets,
-                stepInfo
+                healthScore,
+                steps,
+                diets
             });
             return info
     
             } catch (error) {
             return error.message;
         }
-    }   
+    };
         
     async find(id) {
         const recipe = await Recipe.findByPk(id, {
@@ -46,12 +48,12 @@ class RecipeService {
         return recipe;
     };
 
-    async create({name, image, resume, healthScore, steps, diets}) {
-        if(!name || !image ||!resume || !healthScore ||!steps) throw new Error('Missing information needed to create the recipe');
+    async create({name, image, summary, healthScore, steps, diets}) {
+        if(!name || !image ||!summary || !healthScore ||!steps) throw new Error('Missing information needed to create the recipe');
         const newRecipe = await Recipe.create({
             name,
             image,
-            resume,
+            summary,
             healthScore,
             steps
         });
@@ -59,14 +61,36 @@ class RecipeService {
         // Método de los modelos para agregarse en la tabla intermedia
         return {
             status: 'Created',
-            'New recipe': newRecipe
+            'New recipe': newRecipe,
+            'Diets': diets
         };
        // Probar los constrains y las validacionesa
     };
 
-    findOne(name) {
-        return `Emulo que busco la receta con simil nombre: ${name}`
-    }
+    async findOne(query) {
+        const recipes = await Recipe.findAll({
+            where: {
+                name: {
+                    [Op.iLike]: `%${query}%`
+                }
+            },
+            attributes: ['name']
+        });
+        const matchedRecipes = [];
+        recipes.map(recipe => matchedRecipes.push(recipe.name));
+        try {
+            const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch?number=100&apiKey=36e35b29265846df8544054308236193');
+            const loweQuery = query.toLowerCase();
+            response.data.results.map((result) => {
+                if(result.title.toLowerCase().includes(loweQuery)) {
+                    matchedRecipes.push(result.title);
+                };
+            });
+            return matchedRecipes;
+        } catch (error) {
+            throw new Error(`no matches found with ${query}`);
+        };
+    };
 };
 
 module.exports = RecipeService;
