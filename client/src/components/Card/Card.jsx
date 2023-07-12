@@ -1,10 +1,11 @@
 const Card = (props) => {
     return(
         <div>
+            <p>Este es un Componente DUMB ya que solo muestra información</p>
             <p>Acá va a estar el detalle de cada carta (receta)</p>
-            {props.image}
             <p>Name: {props.name}</p>
-            <p>Diets: {props.diets}</p>
+            <p>Email: {props.email}</p>
+            <p>Phone: {props.phone}</p>
         </div>
     )
 };

@@ -1,22 +1,22 @@
 import Card from "../Card/Card";
 import style from './CardsContainer.module.css'
+import { useSelector } from 'react-redux';
 
 const CardsContainer = () => {
-    const array = [
-        {id: 1, name: 'manu', image: 5, diets: [1, 2, 3]},
-        {id: 2, name: 'piter', image: 5, diets: [1, 2, 3]},
-        {id: 3, name: 'brenda', image: 5, diets: [1, 2, 3]},
-        {id: 4, name: 'droguin', image: 5, diets: [1, 2, 3]}
-    ]
+
+    const users = useSelector(state => state.users)
+ 
+    // Este array hardcodeado debe venir desde el store de redux, más adelante se comunicará con el Back
     return(
         <div className={style.CardContainer}>
+            <p>Este es un compponente SMART, ya que tiene un mapeo lógico dentro</p>
             {
-                array.map(arr => {
+                users.map(user => {
                     return <Card 
-                        key={arr.id}
-                        name={arr.name}
-                        image={arr.image}
-                        diets={array.diets}
+                        id={user.id}
+                        name={user.name}
+                        phone={user.phone}
+                        email={user.email}
                     />
                 })
             }

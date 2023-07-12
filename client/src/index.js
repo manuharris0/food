@@ -2,15 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom'
 // Componente que permite hacer routing
+import { Provider } from 'react-redux';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import store from './redux/store';
 
 ReactDOM.render(
-  <BrowserRouter>
-    <App />
-    {/* Ahora la app tiene la capacidad de definir rutas */}
-  </BrowserRouter>,
+  <Provider store={store}>
+    <BrowserRouter>
+      <App />
+      {/* Ahora la app tiene la capacidad de definir rutas */}
+    </BrowserRouter>
+  </Provider>,
   document.getElementById('root')
 );
 
