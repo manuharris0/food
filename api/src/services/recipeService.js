@@ -8,6 +8,23 @@ class RecipeService {
     
     constructor() {};
 
+    async findAll() {
+        try {
+            const response = await axios.get(`https://api.spoonacular.com/recipes/complexSearch?addRecipeInformation=true&number=100&apiKey=${API_KEY}`);
+            const recipes = response.data.results.map((result) => {
+                return {
+                    id: result.id,
+                    name: result.title,
+                    image: result.image,
+                    diets: result.diets
+                };
+            });
+            return recipes;
+        } catch (error) {
+            throw new Error(`Can't conect to server`);
+        }
+    };
+
     async apiFind(id) {
         try {
             const response = await axios.get(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${API_KEY}`)

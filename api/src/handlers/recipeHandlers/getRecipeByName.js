@@ -1,5 +1,4 @@
 const RecipeService = require("../../services/recipeService");
-
 const service = new RecipeService;
 
 const getRecipeByName = async (req, res) =>  {
@@ -11,7 +10,14 @@ const getRecipeByName = async (req, res) =>  {
         } catch (error) {
             res.status(404).json({err: error.message});
         };
-    } else res.status(400).json({message: 'Some name/id must be passed by query/params'});
+    } else {
+        try {
+            const allRecipes = await service.findAll();
+            res.status(200).json(allRecipes)
+        } catch (error) {
+            res.status(500).json({err: error.message});
+        }
+    }
 };
 
 module.exports = getRecipeByName;
