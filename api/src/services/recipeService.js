@@ -19,7 +19,21 @@ class RecipeService {
                     diets: result.diets
                 };
             });
-            return recipes;
+            const dbRecipes = await Recipe.findAll({
+                attributes: ['id', 'name', 'image',],
+                include: {
+                    model: Diet,
+                    attributes: ['name'],
+                    
+                    through: {
+                        attributes: []
+                    }
+                }
+            });
+            if(dbRecipes.length > 0) {
+                const allRecipes = recipes.concat(dbRecipes);
+                return allRecipes;
+            } else return recipes;
         } catch (error) {
             throw new Error(`Can't conect to server`);
         }
