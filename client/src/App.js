@@ -22,7 +22,7 @@ function App() {
       <Route path='/home' component={Home} />
 
       {/* 'Mejor' forma de definir rutas */}
-      <Route path='/detail' render={() => <Detail unaProp='valor' />}/>
+      <Route path='/detail/:id' render={() => <Detail unaProp='valor' />}/>
       <Route path='/form' render={() => <Form />}/>
     </div>
   );

@@ -1,11 +1,14 @@
+import style from './Card.module.css';
+import { Link } from 'react-router-dom';
+
 const Card = (props) => {
     return(
-        <div>
-            <p>Este es un Componente DUMB ya que solo muestra información</p>
-            <p>Acá va a estar el detalle de cada carta (receta)</p>
-            <p>Name: {props.name}</p>
-            <p>Email: {props.email}</p>
-            <p>Phone: {props.phone}</p>
+        <div className={style.Card}>
+            <img src={props.image} alt='img'/>
+            <Link to='recipes/:id'>
+                <p>Name: {props.name}</p>
+            </Link>
+            <p>Diets: {props.diets}</p>
         </div>
     )
 };

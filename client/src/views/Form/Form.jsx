@@ -30,12 +30,12 @@ const Form = () => {
         setForm({ ...form, [propery]: value })
     }
 
-    const onSubmit = (event) => {
+    const submitHandler = (event) => {
         event.preventDefault()
         axios.post('http://localhost:3001/recipes', form)
         // el parámetro luego de la URL sería el body que se manda
         .then(res=>alert(res))
-
+        .catch(err=>alert(err))
     }
 
     const validate = (form) => {

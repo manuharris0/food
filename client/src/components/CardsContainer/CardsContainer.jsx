@@ -4,19 +4,18 @@ import { useSelector } from 'react-redux';
 
 const CardsContainer = () => {
 
-    const users = useSelector(state => state.users)
+    const recipes = useSelector(state => state.recipes)
  
-    // Este array hardcodeado debe venir desde el store de redux, más adelante se comunicará con el Back
     return(
         <div className={style.CardContainer}>
-            <p>Este es un compponente SMART, ya que tiene un mapeo lógico dentro</p>
             {
-                users.map(user => {
+                recipes.map(recipe => {
                     return <Card 
-                        id={user.id}
-                        name={user.name}
-                        phone={user.phone}
-                        email={user.email}
+                        key={recipe.id}
+                        name={recipe.name}
+                        image={recipe.image}
+                        diets={recipe.diets}
+                    // Falta renderizar las dietas de las recetas de la BDD y acomodar el renderizado de las dietas de las recetas de la api
                     />
                 })
             }

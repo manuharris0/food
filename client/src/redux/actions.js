@@ -11,9 +11,14 @@ export const FILTER_BY_ORIGIN = 'FILTER_BY_ORIGIN';
 // Función que trae todas las recetas:
 export const getRecipes = () => {
     return async function(dispatch) {
-        const apiData = await axios.get('https://jsonplaceholder.typicode.com/users');
-        const recipes = apiData.data;
-        dispatch({ type: GET_RECIPES, payload: recipes })
+        try {
+            const apiData = await axios.get('http://localhost:3001/recipes');
+            const recipes = apiData.data;
+            console.log(recipes);
+            dispatch({ type: GET_RECIPES, payload: recipes })
+        } catch (error) {
+            console.log(error);
+        }
     }
 };
  
